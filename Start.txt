@@ -1,0 +1,38 @@
+VSCODE
+python 3.9.2
+
+
+create virtual env 			python -m venv mele_venv                    OK
+activate                    .\mele_venv\Scripts\Activate.ps1
+deactivate                  deactivate
+upgrade pip 				python -m pip install --upgrade pip         OK
+create list of req 			requirements.txt                            OK
+django==2.3.7                                                           OK
+install django 			 	pip install -r requirements.txt             OK
+create project				django-admin startproject mysite             OK
+cd mysite                   python manage.py migrate
+runserver                   pynhon manage.py runserver                  OK
+nodes                       python manage.py startapp blog
+INSTALLED_APPS              'blog.apps.BlogConfig',
+connect to db               setting.py
+create models
+makemigrations and migrations 
+create superuser            mozg    11791965 manage.py createsuperuser
+
+Quick setup — if you’ve done this kind of thing before
+or	
+https://github.com/zmozg/Mele.git
+Get started by creating a new file or uploading an existing file. We recommend every repository include a README, LICENSE, and .gitignore.
+
+…or create a new repository on the command line
+echo "# Mele" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/zmozg/mele.git
+git push -u origin main
+…or push an existing repository from the command line
+git remote add origin https://github.com/zmozg/mele.git
+git branch -M main
+git push -u origin main
