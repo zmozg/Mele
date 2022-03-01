@@ -51,13 +51,10 @@ def post_list(request):
     return render(request, template, values)
 
 def post_detail(request, year, month, day, post):
-    print('Yfxfkj')
     post = get_object_or_404(Post, slug=post, status='published', publish__year=year,
                             publish__month=month, publish__day=day)
     comments = post.comments.filter(active=True)
     new_comment = None
-    print('request\n',request)
-    #comment_form = CommentForm()
     if request.method == 'POST':
         print('post poshel')
         comment_form = CommentForm(data=request.POST)
@@ -72,6 +69,6 @@ def post_detail(request, year, month, day, post):
     values = {'post': post,
                 'comments': comments,
                 'new_comment': new_comment,
-                'comment_form': comment_form}
-    print(values)
+                'comment_form': comment_form,
+                }
     return render(request, template, values)
