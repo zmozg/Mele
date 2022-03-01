@@ -4,6 +4,7 @@ from django.views.generic import ListView
 from django.core.mail import send_mail
 
 from .forms import EmailPostForm, CommentForm
+from taggit.models import Tag
 from .models import Post, Comment
 
 class PostList(ListView):
@@ -36,8 +37,12 @@ def post_share(request, post_id):
     return render(request, 'blog/post/share.html',
                         {'post':post, 'form':form, 'sent':sent})
 
-def post_list(request):
+def post_list(request, tag_slug=None):
     posts_all = Post.published.all()
+    tag = None
+    if tag_slug:
+        tag = get_object_or_404(Tag, slug=tag_slug)
+        posts_all = posts_all.filter(tags__in=[tag])
     paginator = Paginator(posts_all, 3)
     page = request.GET.get('page')
     try:
@@ -47,7 +52,7 @@ def post_list(request):
     except EmptyPage:
         posts = paginator.page(paginator.num_pages)
     template = 'blog/post/list.html'
-    values = {'posts': posts, 'page': page}
+    values = {'posts': posts, 'page': page, 'tag': tag}
     return render(request, template, values)
 
 def post_detail(request, year, month, day, post):
