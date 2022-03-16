@@ -36,3 +36,12 @@ git push -u origin main
 git remote add origin https://github.com/zmozg/mele.git
 git branch -M main
 git push -u origin main
+
+install Postgress 14.2.1
+https://www.enterprisedb.com/downloads/postgres-postgresql-downloads
+
+from django.core import serializers
+XMLSerializer = serializers.get_serializer("xml")
+xml_serializer = XMLSerializer()
+with open("file.xml", "w") as out:
+    xml_serializer.serialize(Post.objects.all(), stream=out)

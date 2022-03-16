@@ -60,13 +60,14 @@ def post_list(request, tag_slug=None):
 def post_detail(request, year, month, day, post):
     post = get_object_or_404(Post, slug=post, status='published', publish__year=year,
                             publish__month=month, publish__day=day)
-    comments = post.comments.filter(active=True)
+    print(post.get_absolute_url())
+    comments = post.comments.filter(active=True).order_by('-created')
     new_comment = None
+    print('check')
     if request.method == 'POST':
-        print('post poshel')
+        print('post_POST')
         comment_form = CommentForm(data=request.POST)
         if comment_form.is_valid():
-            print('valid')
             new_comment = comment_form.save(commit=False)
             new_comment.post = post
             new_comment.save()
@@ -84,4 +85,5 @@ def post_detail(request, year, month, day, post):
                 'comment_form': comment_form,
                 'similar_posts': similar_posts
                 }
+    print(post.slug)
     return render(request, template, values)

@@ -39,11 +39,13 @@ class Post(models.Model):
     tags = TaggableManager()
 
     def get_absolute_url(self):
+        print('get_absolute url',self.slug)
         return reverse('blog:post_detail',
                        args=[self.publish.year,
                              self.publish.month,
                              self.publish.day,
-                             self.slug])
+                             self.slug]
+                             )
     
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
