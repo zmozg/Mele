@@ -1,10 +1,12 @@
+from re import search
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import ListView
 from django.core.mail import send_mail
 from django.db.models import Count
+from django.contrib.postgres.search import SearchVector
 
-from .forms import EmailPostForm, CommentForm
+from .forms import EmailPostForm, CommentForm, SearchForm
 from taggit.models import Tag
 from .models import Post, Comment
 
@@ -44,7 +46,6 @@ def post_list(request, tag_slug=None):
     if tag_slug:
         tag = get_object_or_404(Tag, slug=tag_slug)
         posts_all = posts_all.filter(tags__in=[tag])
-    print(tag)
     paginator = Paginator(posts_all, 3)
     page = request.GET.get('page')
     try:
@@ -60,12 +61,9 @@ def post_list(request, tag_slug=None):
 def post_detail(request, year, month, day, post):
     post = get_object_or_404(Post, slug=post, status='published', publish__year=year,
                             publish__month=month, publish__day=day)
-    print(post.get_absolute_url())
     comments = post.comments.filter(active=True).order_by('-created')
     new_comment = None
-    print('check')
     if request.method == 'POST':
-        print('post_POST')
         comment_form = CommentForm(data=request.POST)
         if comment_form.is_valid():
             new_comment = comment_form.save(commit=False)
@@ -85,5 +83,20 @@ def post_detail(request, year, month, day, post):
                 'comment_form': comment_form,
                 'similar_posts': similar_posts
                 }
-    print(post.slug)
+    print(len(request.GET))
     return render(request, template, values)
+
+def post_search(request):
+    form = SearchForm()
+    query = None
+    results = []
+    if 'query' in request.GET:
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            query = form.cleaned_data['query']
+            results = Post.objects.annotate(
+                search=SearchVector('title', 'body'),
+                ).filter(search=query)
+    return render(request, 'blog/post/search.html', {'results': results,
+                                                        'query': query,
+                                                        'form': form})

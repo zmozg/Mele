@@ -17,7 +17,7 @@ INSTALLED_APPS              'blog.apps.BlogConfig',
 connect to db               setting.py
 create models
 makemigrations and migrations 
-create superuser            mozg    11791965 manage.py createsuperuser
+create superuser            mozg    11791965/admin manage.py createsuperuser
 
 Quick setup — if you’ve done this kind of thing before
 or	
@@ -38,10 +38,18 @@ git branch -M main
 git push -u origin main
 
 install Postgress 14.2.1
+
 https://www.enterprisedb.com/downloads/postgres-postgresql-downloads
+https://winitpro.ru/index.php/2019/10/25/ustanovka-nastrojka-postgresql-v-windows/
+прописываем Path
+psql -V
+psql postgres postgres
 
 from django.core import serializers
 XMLSerializer = serializers.get_serializer("xml")
 xml_serializer = XMLSerializer()
 with open("file.xml", "w") as out:
     xml_serializer.serialize(Post.objects.all(), stream=out)
+
+python .\mysite\manage.py dumpdata blog.post blog.comment taggit.tag -o ./mysite/blog/fixtures/data.json
+python .\mysite\manage.py loaddata data
