@@ -4,7 +4,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import ListView
 from django.core.mail import send_mail
 from django.db.models import Count
-from django.contrib.postgres.search import SearchVector
+from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank, TrigramSimilarity
 
 from .forms import EmailPostForm, CommentForm, SearchForm
 from taggit.models import Tag
@@ -15,6 +15,7 @@ class PostList(ListView):
     context_object_name = 'posts'
     paginate_by = 3
     template_name = 'blog/post/list.html'
+
 
 def post_share(request, post_id):
     post = get_object_or_404(Post, id=post_id, status='published')
@@ -54,6 +55,7 @@ def post_list(request, tag_slug=None):
         posts = paginator.page(1)
     except EmptyPage:
         posts = paginator.page(paginator.num_pages)
+    
     template = 'blog/post/list.html'
     values = {'posts': posts, 'page': page, 'tag': tag}
     return render(request, template, values)
@@ -81,22 +83,27 @@ def post_detail(request, year, month, day, post):
                 'comments': comments,
                 'new_comment': new_comment,
                 'comment_form': comment_form,
-                'similar_posts': similar_posts
+                'similar_posts': similar_posts,
                 }
-    print(len(request.GET))
     return render(request, template, values)
 
 def post_search(request):
-    form = SearchForm()
+    search_form = SearchForm()
     query = None
     results = []
     if 'query' in request.GET:
-        form = SearchForm(request.GET)
-        if form.is_valid():
-            query = form.cleaned_data['query']
+        search_form = SearchForm(request.GET)
+        if search_form.is_valid():
+            query = search_form.cleaned_data['query']
+            search_vector = SearchVector('title', weight='A') + SearchVector('body', weight='B')
+            search_query = SearchQuery(query)
+            # results = Post.objects.annotate(
+            #     search=search_vector,
+            #     rank=SearchRank(search_vector, search_query)
+            # ).filter(rank__gte=0.3).order_by('-rank')
             results = Post.objects.annotate(
-                search=SearchVector('title', 'body'),
-                ).filter(search=query)
+                similarity=TrigramSimilarity('title', query),
+                ).filter(similarity__gt=0.3).order_by('-similarity')
     return render(request, 'blog/post/search.html', {'results': results,
                                                         'query': query,
-                                                        'form': form})
+                                                        'search_form': search_form})

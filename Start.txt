@@ -44,6 +44,7 @@ https://winitpro.ru/index.php/2019/10/25/ustanovka-nastrojka-postgresql-v-window
 прописываем Path
 psql -V
 psql postgres postgres
+CREATE EXTENSION pg_trgm; триграммы вкл
 
 from django.core import serializers
 XMLSerializer = serializers.get_serializer("xml")
