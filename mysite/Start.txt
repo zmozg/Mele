@@ -1,17 +1,19 @@
 VSCODE
 python 3.9.2
+
+
 create virtual env 			python -m venv mele_venv                    OK
-activate                    .\mele_venv\bookmarks\Scripts\Activate.ps1
+activate                    .\mele_venv\Scripts\Activate.ps1
 deactivate                  deactivate
 upgrade pip 				python -m pip install --upgrade pip         OK
 create list of req 			requirements.txt                            OK
 django==2.3.7                                                           OK
 install django 			 	pip install -r requirements.txt             OK
-create project				django-admin startproject bookmarks             OK
-cd bookmarks                python manage.py migrate
+create project				django-admin startproject mysite             OK
+cd mysite                   python manage.py migrate
 runserver                   pynhon manage.py runserver                  OK
-new application             python manage.py startapp account
-INSTALLED_APPS              'account.apps.BlogConfig',
+nodes                       python manage.py startapp blog
+INSTALLED_APPS              'blog.apps.BlogConfig',
 connect to db               setting.py
 create models
 makemigrations and migrations 
@@ -44,3 +46,11 @@ psql -V
 psql postgres postgres
 CREATE EXTENSION pg_trgm; триграммы вкл
 
+from django.core import serializers
+XMLSerializer = serializers.get_serializer("xml")
+xml_serializer = XMLSerializer()
+with open("file.xml", "w") as out:
+    xml_serializer.serialize(Post.objects.all(), stream=out)
+
+python .\mysite\manage.py dumpdata blog.post blog.comment taggit.tag -o ./mysite/blog/fixtures/data.json
+python .\mysite\manage.py loaddata data
