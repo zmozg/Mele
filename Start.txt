@@ -43,4 +43,6 @@ https://winitpro.ru/index.php/2019/10/25/ustanovka-nastrojka-postgresql-v-window
 psql -V
 psql postgres postgres
 CREATE EXTENSION pg_trgm; триграммы вкл
-
+CREATE USER bookmarks;
+ALTER USER bookmarks WITH PASSWORD 'bookmarks'; 
+CREATE DATABASE bookmarks OWNER bookmarks;
