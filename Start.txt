@@ -46,3 +46,6 @@ CREATE EXTENSION pg_trgm; триграммы вкл
 CREATE USER bookmarks;
 ALTER USER bookmarks WITH PASSWORD 'bookmarks'; 
 CREATE DATABASE bookmarks OWNER bookmarks;
+
+
+https://ngrok.com/download

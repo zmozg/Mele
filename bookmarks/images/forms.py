@@ -1,3 +1,4 @@
+from urllib import request
 from django.core.files.base import ContentFile
 from django.utils.text import slugify
 from django import forms
@@ -23,9 +24,13 @@ class ImageCreateForm(forms.ModelForm):
         image_url = self.cleaned_data['url']
         image_name = '{}.{}'.format(
                                     slugify(image.title),
-                                    url.rsplit('.', 1)[1].lower())
+                                    image_url.rsplit('.', 1)[1].lower())
         response = request.urlopen(image_url)
         image.image.save(image_name, ContentFile(response.read()), save=False)
         if commit:
             image.save()
         return image
+        
+        #http://127.0.0.1:8000/images/create/?
+        # title=%20Django%20and%20Duke&
+        # url=http://upload.wikimedia.org/wikipedia/commons/8/85/Django_Reinhardt_and_Duke_Ellington_%28Gottlieb%29.jpg
