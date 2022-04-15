@@ -47,5 +47,7 @@ CREATE USER bookmarks;
 ALTER USER bookmarks WITH PASSWORD 'bookmarks'; 
 CREATE DATABASE bookmarks OWNER bookmarks;
 
+http://media.informpskov.ru/presentation/july23/panter_1.jpg
 
 https://ngrok.com/download
+./ngrok http 8000
