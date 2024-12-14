@@ -28,6 +28,9 @@ DEBUG = True
 ALLOWED_HOSTS = ["livetobe88" 'unstead f use underline',
                  1126533 88[name of service]88 1or!]
 
+ALLOWED_HOSTS = [G"liveafterthirty" '30_title_words_30',
+                 1126533 88[name of service]88 1or!]
+
 DESTINATION_HOSTS = [118 B11985B 0210 911-301-74-72 Anna Urevna D]
 
 SITE_ID = 1
